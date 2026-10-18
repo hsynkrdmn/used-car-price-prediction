@@ -1,0 +1,12 @@
+{
+  "random_state": 42,
+  "reference_year": 2026,
+  "test_size": 0.2,
+  "cv_folds": 5,
+  "min_price": 100000,
+  "max_price": 100000000,
+  "main_models_use_tramer": false,
+  "damage_history_used": false,
+  "tramer_rows_removed": false,
+  "selected_model": "CatBoost"
+}

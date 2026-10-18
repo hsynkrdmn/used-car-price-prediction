@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#143b43">
+  <meta name="description" content="Explore a used car's listing value with a CatBoost model trained on Turkish vehicle listings.">
+  <title>MotorValue — Know your car's value</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="predictor.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#estimate" aria-label="MotorValue home">
+      <svg viewBox="0 0 36 36" width="35" height="35" aria-hidden="true"><rect width="36" height="36" rx="11" fill="currentColor"/><path d="M8 24V13l5 8 5-8v11m3 0 5-11 3 11" fill="none" stroke="#f4f8e8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>motor<span class="brand-light">value</span><span class="brand-period">.</span></span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="#estimate" class="active" data-page="estimate">Estimator</a>
+      <a href="#model" data-page="model">The model</a>
+      <a href="#notes" data-page="notes">Data notes</a>
+    </nav>
+    <div class="model-status" id="model-status"><span class="status-dot"></span><span>Loading model</span></div>
+  </header>
+
+  <main>
+    <section id="page-estimate" class="page" aria-labelledby="estimate-heading">
+      <div class="intro">
+        <div>
+          <p class="eyebrow"><span class="short-line"></span> A LITTLE DATA. A CLEARER PICTURE.</p>
+          <h1 id="estimate-heading">What is your<br>car <span class="serif-word">worth?</span></h1>
+        </div>
+        <div class="intro-aside"><p>A useful starting point for your next move.<br>Add your car's details. Get a model-backed listing estimate.</p><span class="market-label"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18Z" stroke="currentColor" stroke-width="1.4"/></svg> Turkish market <span>·</span> Prices in TRY</span></div>
+      </div>
+
+      <div class="workspace">
+        <form class="vehicle-form panel" id="vehicle-form">
+          <div class="panel-heading"><div><span class="section-number">01</span><h2>Your vehicle</h2></div><button class="text-button" type="button" id="use-example">Use example <span aria-hidden="true">↗</span></button></div>
+          <p class="form-intro" id="form-hint">Start with an example, then make it yours.</p>
+          <div class="form-grid">
+            <label class="field">Brand<select id="brand" name="brand" required disabled><option>Loading brands…</option></select></label>
+            <label class="field">Series<select id="series" name="series" required disabled><option>Select a brand</option></select></label>
+            <label class="field span-two">Model / trim<select id="model" name="model" required disabled><option>Select a series</option></select></label>
+            <label class="field">Model year<input id="year" name="year" type="number" min="1950" max="2027" step="1" inputmode="numeric" required placeholder="e.g. 2018"></label>
+            <label class="field">Mileage<span class="input-unit-wrap"><input id="mileage_km" name="mileage_km" type="number" min="0" max="5000000" step="1" inputmode="numeric" required placeholder="e.g. 95000"><span class="input-unit">km</span></span></label>
+            <label class="field">Transmission<select id="transmission" name="transmission" required disabled><option>Loading…</option></select></label>
+            <label class="field">Fuel type<select id="fuel_type" name="fuel_type" required disabled><option>Loading…</option></select></label>
+          </div>
+          <details class="advanced-details"><summary><span>More vehicle details <span class="subtle">Engine, body & colour</span></span><span class="details-plus" aria-hidden="true">+</span></summary><div class="form-grid advanced-grid">
+            <label class="field">Engine size<span class="input-unit-wrap"><input id="engine_displacement_cc" name="engine_displacement_cc" type="number" min="0" max="10000" step="any" inputmode="decimal"><span class="input-unit">cc</span></span></label>
+            <label class="field">Engine power<span class="input-unit-wrap"><input id="engine_power_hp" name="engine_power_hp" type="number" min="0" max="3000" step="any" inputmode="decimal"><span class="input-unit">hp</span></span></label>
+            <label class="field">Body type<select id="body_type" name="body_type" disabled><option>Loading…</option></select></label>
+            <label class="field">Drive type<select id="drivetrain" name="drivetrain" disabled><option>Loading…</option></select></label>
+            <label class="field span-two">Colour<select id="color" name="color" disabled><option>Loading…</option></select></label>
+          </div></details>
+          <p class="spec-note">Model selection fills typical specs from the dataset. Check them against your car. Damage history is not included in the estimate.</p>
+          <p class="form-error" id="form-error" role="alert" hidden></p>
+          <button type="submit" class="estimate-button" id="estimate-button" disabled><span>Estimate listing price</span><svg width="21" height="21" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <p class="privacy-note"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.5"/></svg> Your estimate runs in this browser.</p>
+        </form>
+
+        <aside class="results-column">
+          <div class="estimate-card" aria-live="polite" aria-atomic="true">
+            <div class="estimate-card-top"><span class="eyebrow">YOUR ESTIMATE</span><span class="model-badge"><span></span> CATBOOST</span></div>
+            <p class="result-state" id="result-state">A starting point, backed by data.</p>
+            <div id="result-empty"><h2>Good decisions<br>start with a <span class="serif-word">number.</span></h2><p>Tell us a little about your car.<br>We'll do the number crunching.</p></div>
+            <div id="result-filled" hidden><p class="estimate-caption">Estimated listing price</p><p class="price-value" id="estimate-price">—</p><p class="price-footnote">Rounded to the nearest ₺1,000.</p><div class="estimate-actions"><button type="button" id="copy-estimate">Copy estimate <span aria-hidden="true">↗</span></button><button type="button" id="reset-estimate">Reset</button></div></div>
+            <div class="car-illustration" aria-hidden="true"><svg viewBox="0 0 480 190" fill="none"><ellipse cx="240" cy="165" rx="204" ry="10" fill="#092d33"/><path d="M38 128h405" stroke="#53777a" stroke-dasharray="3 9"/><path d="M54 122c-3-15 2-29 12-32l68-12 46-47c11-10 24-14 42-14h70c21 0 31 5 44 19l33 37 50 14c12 3 19 13 20 26l1 24H55l-1-15Z" fill="#31585d" stroke="#b2c8bb" stroke-width="2"/><path d="m151 75 40-40c7-7 18-10 30-10h65c15 0 24 4 34 14l31 36H151Z" fill="#133d45" stroke="#b2c8bb" stroke-width="1.6"/><path d="M242 25v50m15-50v50M71 96l27-4m312 8 20 9M113 82l-4 22m246-25 9 28M156 86h192M172 95h20m90 0h20" stroke="#b2c8bb" stroke-width="1.7" stroke-linecap="round"/><path d="M90 139c0-27 45-44 64-17 4 6 6 11 6 17m177 0c0-27 44-44 63-17 4 6 6 11 6 17" fill="#133d45"/><circle cx="125" cy="139" r="26" fill="#102d33" stroke="#b2c8bb" stroke-width="2"/><circle cx="125" cy="139" r="14" stroke="#8ba7a0" stroke-width="6"/><circle cx="372" cy="139" r="26" fill="#102d33" stroke="#b2c8bb" stroke-width="2"/><circle cx="372" cy="139" r="14" stroke="#8ba7a0" stroke-width="6"/><path d="M165 132h168M58 119h24m332-2h23" stroke="#d8e4bc" stroke-width="3" stroke-linecap="round"/></svg></div>
+            <div class="vehicle-summary"><div><strong id="summary-vehicle">Your next move, made clearer.</strong><span id="summary-details">Choose your vehicle to get started.</span></div><svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"><circle cx="14" cy="14" r="13" stroke="#70948d"/><path d="m10 18 8-8m-7 0h7v7" stroke="#dbe8d6" stroke-width="1.5"/></svg></div>
+          </div>
+          <div class="evidence-card panel"><div class="evidence-heading"><span class="tiny-spark" aria-hidden="true">✳</span><h3>The data behind the number</h3></div><div class="evidence-grid"><div><strong id="metric-r2">—</strong><span>Test R² score</span></div><div><strong id="metric-mae">—</strong><span>Average test error</span></div></div><p>A model estimate is a guide, not a guaranteed sale price. Condition, location and negotiation still matter.</p><a href="#model" class="text-link">Explore the model <span aria-hidden="true">↗</span></a></div>
+          <p class="quiet-note"><span aria-hidden="true">↳</span> Built for curiosity. Grounded in real listings.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="page-model" class="page" aria-labelledby="model-heading" hidden>
+      <div class="section-intro"><p class="eyebrow"><span class="short-line"></span> THE METHOD BEHIND THE ESTIMATE</p><h1 id="model-heading">Under the <span class="serif-word">hood.</span></h1><p>Real held-out results from the project's model. R² is a score, not a percentage of correct prices.</p></div>
+      <div class="stat-grid" id="model-stats"></div>
+      <div class="panel model-table-panel"><div class="panel-heading"><div><span class="section-number">02</span><h2>A fair comparison</h2></div><span class="small-tag">5-fold group CV</span></div><p class="table-description">The model with the lowest cross-validation MAE is selected. Every model uses the same grouped splits.</p><div class="table-scroll"><table><thead><tr><th scope="col">Model</th><th scope="col">CV MAE</th><th scope="col">Test MAE</th><th scope="col">Test R²</th></tr></thead><tbody id="comparison-table"></tbody></table></div><p class="table-footnote">Price errors are in TRY. Lower MAE is better; higher R² is better. These results describe the saved data split.</p></div>
+      <div class="info-grid"><article class="panel info-card"><span class="step-circle">01</span><h3>Prepare the data</h3><p>Repeated rows are removed. Missing inputs are filled using training data only. Cars with identical basic details stay in the same split group.</p></article><article class="panel info-card"><span class="step-circle">02</span><h3>Learn the patterns</h3><p>CatBoost learns log prices using vehicle details. Five-fold cross-validation selects the model before the test set is evaluated.</p></article><article class="panel info-card"><span class="step-circle">03</span><h3>Estimate in your browser</h3><p>The trained decision trees and preprocessing are loaded here. Each estimate uses the exported model, with no separate prediction server.</p></article></div>
+    </section>
+
+    <section id="page-notes" class="page" aria-labelledby="notes-heading" hidden>
+      <div class="section-intro"><p class="eyebrow"><span class="short-line"></span> A LITTLE CONTEXT GOES A LONG WAY</p><h1 id="notes-heading">Know the <span class="serif-word">limits.</span></h1><p>Useful estimates start with understanding the data behind them.</p></div>
+      <div class="notes-layout"><div class="panel notes-card"><h2>What the number means</h2><p>This estimates a used car's listing price in TRY. Listings are asking prices, so the final sale price can be different.</p><h3>Damage history is excluded</h3><p>Reported damage amounts (Tramer) and damage-condition fields are not model inputs because their quality could not be verified. No training rows are removed based on their damage amount.</p><p>This estimate does not account for accident history, repairs or damage severity. Two cars with the same entered details receive the same estimate even if their damage histories differ.</p><h3>Time and coverage</h3><p id="coverage-note"></p><p>There are no listing dates in the model inputs. These test scores do not prove how well it will predict prices in a future market.</p></div><div><article class="panel notes-card mint-card"><span class="tiny-spark" aria-hidden="true">✳</span><h2>Keep the details honest.</h2><p>Model selection loads typical specs from the dataset. Check the year, mileage, engine and other details before estimating.</p><p>Check damage and repair history separately when comparing real listings.</p></article><article class="panel notes-card"><h3>Local by design</h3><p>The model runs in your browser. This page does not send the vehicle details you enter to a prediction service.</p><p>Predictions are not a vehicle inspection or a market quote.</p></article></div></div>
+    </section>
+  </main>
+  <footer><a class="footer-brand" href="#estimate">motorvalue.</a><span>A used-car price prediction project.</span><span>Made with data. Used with judgement.</span></footer>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>

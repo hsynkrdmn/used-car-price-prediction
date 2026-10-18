@@ -1,0 +1,9 @@
+step,affected_rows,remaining_rows
+Remove missing target or vehicle identity,19,26514
+Remove duplicate rows after excluding unreliable columns,1371,25143
+Keep the selected price range,63,25080
+Mark invalid or placeholder mileage as missing,4,25080
+Mark invalid year as missing,0,25080
+Mark non-positive engine_displacement_cc as missing,0,25080
+Mark non-positive engine_power_hp as missing,0,25080
+Remove duplicates created by the cleaning rules,0,25080
