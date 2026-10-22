@@ -72,8 +72,8 @@ MAE is the average absolute price error; lower is better. R² describes how well
 
 | File | Description |
 |---|---|
-| [car-price-analysis-simple.ipynb](car-price-analysis-simple.ipynb) | Main notebook with saved outputs |
-| [car_price_analysis_simple.py](car_price_analysis_simple.py) | Python version of the notebook cells |
+| [car-price-prediction.ipynb](car-price-prediction.ipynb) | Main notebook with saved outputs |
+| [car_price_prediction_simple.py](car_price_prediction.py) | Python version of the notebook cells |
 | `car_dataset_raw.csv` | Original dataset |
 | `requirements-car-price.txt` | Package versions used for the project |
 | `run_simple_notebook.py` | Builds and runs the notebook from the Python file |
