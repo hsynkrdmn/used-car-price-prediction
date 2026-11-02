@@ -16,7 +16,7 @@ Choose Turkish or English, adjust the brand, series, trim, year and mileage, the
 
 GitHub's file viewer does not run `index.html`. Use the GitHub Pages link for the interactive application.
 
-![Used car price analysis interface in dark mode](assets/preview.png)
+![English-language used car price analysis interface in dark mode](assets/preview.png)
 
 ## Features
 
