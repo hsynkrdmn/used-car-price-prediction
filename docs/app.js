@@ -4,7 +4,7 @@ const $ = id => document.getElementById(id);
 let savedLanguage;
 try { savedLanguage = localStorage.getItem('car-analysis-language'); } catch {}
 const state = { language: savedLanguage === 'en' ? 'en' : 'tr', metadata: null, model: null,
-  analytics: null, calibration: null, result: null, dirty: false, status: 'loading', hint: 'defaultsHint', error: null, timer: null };
+  analytics: null, calibration: null, result: null, dirty: false, status: 'loading', hint: 'defaultsHint', error: null, timer: null, blueprintTimer: null };
 const t = (key, params) => CarI18n.t(state.language, key, params);
 const locale = () => state.language === 'tr' ? 'tr-TR' : 'en-GB';
 const number = (value, digits = 0) => Number(value).toLocaleString(locale(), { minimumFractionDigits: digits, maximumFractionDigits: digits });
@@ -84,9 +84,16 @@ function renderError() {
   $('form-error').hidden = !state.error;
   $('form-error').textContent = state.error ? t(state.error) : '';
 }
+function pulseBlueprint() {
+  const card = document.querySelector('.estimate-card');
+  clearTimeout(state.blueprintTimer);
+  card.classList.add('is-responding');
+  state.blueprintTimer = setTimeout(() => card.classList.remove('is-responding'), 1600);
+}
 function markDirty() {
   state.error = null;
   renderError();
+  if (state.status === 'ready') pulseBlueprint();
   if (state.result) { state.dirty = true; renderResult(); }
 }
 function clearResult() {
@@ -112,7 +119,9 @@ function renderResult() {
     return;
   }
   const { input, prediction, band, impacts, interval } = result;
-  $('estimate-price').textContent = money(Math.round(prediction / 1000) * 1000);
+  const price = money(Math.round(prediction / 1000) * 1000);
+  $('estimate-price').textContent = price;
+  $('estimate-price').classList.toggle('long-price', price.length > 12);
   $('estimate-range').textContent = `${money(Math.floor(band.lower / 1000) * 1000)} – ${money(Math.ceil(band.upper / 1000) * 1000)}`;
   $('interval-label').textContent = t('bandTitle', { margin: number(band.margin * 100, 1) });
   $('range-point').style.left = '50%';
@@ -122,6 +131,7 @@ function renderResult() {
   });
   $('summary-vehicle').textContent = `${input.brand} ${input.series} · ${input.model}`;
   $('summary-details').textContent = `${input.year} · ${number(input.mileage_km)} km · ${label(input.transmission)}`;
+  const maximumImpact = Math.max(...impacts.map(impact => Math.abs(impact.value)), 1);
   $('impact-list').replaceChildren(...impacts.map(impact => {
     const item = document.createElement('li');
     item.className = impact.value > 0 ? 'impact-positive' : impact.value < 0 ? 'impact-negative' : 'impact-neutral';
@@ -130,7 +140,13 @@ function renderResult() {
       : { trim: 'impactTrim', mileage: 'impactMileage', age: 'impactAge' }[impact.id];
     title.textContent = t(key);
     value.textContent = signedMoney(impact.value);
-    item.append(title, value);
+    const heading = document.createElement('div'); heading.className = 'telemetry-heading';
+    heading.append(title, value);
+    const track = document.createElement('div'), fill = document.createElement('span');
+    track.className = 'telemetry-track'; track.setAttribute('aria-hidden', 'true');
+    fill.className = 'telemetry-fill';
+    fill.style.width = `${48 * Math.abs(impact.value) / maximumImpact}%`;
+    track.append(fill); item.append(heading, track);
     return item;
   }));
 }
@@ -188,7 +204,7 @@ function renderTheme() {
   const action = t(light ? 'switchToDark' : 'switchToLight');
   $('theme-toggle').setAttribute('aria-label', action);
   $('theme-toggle').title = action;
-  document.querySelector('meta[name="theme-color"]').content = light ? '#f3f5f9' : '#101419';
+  document.querySelector('meta[name="theme-color"]').content = light ? '#eef5f8' : '#080f1b';
 }
 function setLanguage(language) {
   state.language = language === 'en' ? 'en' : 'tr';
@@ -255,7 +271,7 @@ $('vehicle-form').addEventListener('submit', async event => {
     const impacts = CarPredictor.simulatedImpacts(input, prediction, state.metadata.reference_year);
     const interval = CarPredictor.predictionInterval(prediction, state.calibration);
     state.result = { input, prediction, band, impacts, interval }; state.dirty = false; state.error = null;
-    renderResult(); renderError();
+    renderResult(); renderError(); pulseBlueprint();
     if (window.innerWidth < 701) document.querySelector('.estimate-card').scrollIntoView({
       behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
   } catch { state.error = 'invalidPrediction'; renderError(); }

@@ -28,6 +28,8 @@ Edit files directly in `docs/`; there is no second site directory to sync.
 | `styles.css`, `theme.css` | Base and responsive visual styles |
 | `app.js` | Form state, language switching, result and interval disclosures |
 | `i18n.js` | Matching Turkish / English UI messages |
+| `car-blueprint.svg` | Decorative vehicle wireframe behind the price gauge |
+| `fonts/` | Locally served JetBrains Mono font and its OFL license |
 | `predictor.js` | Preprocessing, exact CatBoost inference, MAPE band and simulated effects |
 | `model.json` | Frozen trees and learned preprocessing values |
 | `catalog.json` | Vehicle options, defaults and saved comparison scores |
@@ -35,6 +37,10 @@ Edit files directly in `docs/`; there is no second site directory to sync.
 | `interval.json` | Calibration for the optional 95% prediction interval |
 
 The vehicle summary appears above the price. **Illustrative Price Effects / Temsili Fiyat Etkileri** is labelled as a simulation, rather than SHAP analysis. Language changes preserve inputs, results, stale status and an open interval disclosure.
+
+The price gauge is decorative and does not encode a percentile or a price scale. Effect bars share a central zero axis and are scaled to the largest absolute simulated contribution in the current result. Blueprint glow responds to vehicle edits and calculations; reduced-motion preferences disable transitions. Dark mode is the default, with a locally saved light-mode option.
+
+Numeric readouts use a locally bundled [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) font, distributed under the [SIL Open Font License](../docs/fonts/OFL.txt). No external font request is needed at runtime.
 
 ## Rebuild the model
 
