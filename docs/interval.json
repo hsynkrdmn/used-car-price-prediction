@@ -1,0 +1,14 @@
+{
+  "method": "group_split_conformal_log",
+  "coverage": 0.95,
+  "log_radius": 0.27934649109041665,
+  "calibration_rows": 2500,
+  "calibration_groups": 2491,
+  "evaluation_rows": 2511,
+  "evaluation_groups": 2492,
+  "empirical_row_coverage": 0.9418558343289526,
+  "empirical_group_coverage": 0.9414125200642055,
+  "model_sha256": "12f5b6753161fedbfb2e7bb5633a75a90abdfed39ea0c6525889484b7531d28e",
+  "split_seed": 42,
+  "assumption": "Coverage is marginal across exchangeable vehicle groups, not a guarantee for an individual car or a future market."
+}

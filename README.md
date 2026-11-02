@@ -1,127 +1,135 @@
-# Used Car Price Prediction
+# İkinci El Araç Piyasa Değeri Analizi
 
-This project predicts used-car listing prices in Turkish lira (TRY). It includes data exploration, data cleaning, feature preparation, and a comparison of regression models.
+**[Hüseyin Karaduman](https://github.com/hsynkrdmn) · Data Science & Analytics · B.Sc. Statistics**
 
-The main goal is to build a clear machine learning workflow and understand how data quality affects the results.
+Türkiye ikinci el araç ilanları üzerinde veri temizleme, model karşılaştırması ve fiyat tahmini. Eğitilmiş CatBoost modeli web arayüzünde doğrudan tarayıcıda çalışır; ziyaretçinin Python, API anahtarı veya IDE kullanması gerekmez.
 
-## Web Interface
+## Web uygulamasını kullanma
 
-The interface runs the exported CatBoost model in the browser. Visitors do not need Python, an API key, or a prediction server. Damage history is not included.
+<!-- live-demo:start -->
+**[İnteraktif web uygulamasını aç](https://hsynkrdmn.github.io/used-car-price-prediction/)** · [GitHub deposu](https://github.com/hsynkrdmn/used-car-price-prediction)
 
-<img src="motorvalue-preview.png" alt="MotorValue car price estimator without a damage input" width="820">
+Uygulama adresi GitHub Pages yayını etkinleştirildiğinde kullanılabilir. İlk kurulum adımları aşağıdadır; son yayın durumunu bu deponun **Deployments → github-pages** bölümünden kontrol edebilirsiniz.
+<!-- live-demo:end -->
 
-## Dataset
+Arayüz Türkçe ve İngilizce kullanılabilir. Marka, seri, donanım, yıl ve kilometre bilgilerini düzenleyip **Fiyatı hesapla** düğmesine basın. Otomatik doldurulan bilgileri aracınızla karşılaştırın.
 
-The original dataset has **26,533 rows and 26 columns**. It includes:
+GitHub'ın dosya görüntüleyicisinde `index.html` dosyasını açmak uygulamayı çalıştırmaz. İnteraktif kullanım GitHub Pages bağlantısından yapılır.
 
-- Brand, series, and model
-- Year and mileage
-- Transmission, fuel type, and body type
-- Engine size and engine power
-- Damage claim amount, stored as `tramer_tl`
-- Listing price, stored as `price_try`
+![Araç fiyat analizi arayüzü](assets/preview.png)
 
-The target is `price_try`. Some category values are in Turkish, as they appear in the original data. Listing prices may differ from final sale prices.
+## Arayüzde neler var?
 
-## Project Steps
+- Gerçek CatBoost nokta tahmini; hesaplama tarayıcıda yapılır.
+- Benzer marka/seri gruplarının MAPE değerinden hesaplanan, %8–10 ile sınırlandırılmış gösterge bandı.
+- Ayrı açılır bölümde kalibre edilmiş, %95 kapsam hedefli tahmin aralığı.
+- Donanım, kilometre ve yaş için açıkça **simülasyon** olarak işaretlenen temsili fiyat etkileri.
+- Model sekmesinde CatBoost / LightGBM / XGBoost karşılaştırması ve ölçülen permütasyon önemi grafikleri.
+- Yerel olarak hatırlanan dil tercihi; araç bilgileri bir tahmin servisine gönderilmez.
 
-1. Check missing values, duplicate rows, and unusual values.
-2. Remove unreliable columns and repeated rows.
-3. Keep listings between TRY 100,000 and TRY 100,000,000.
-4. Prepare the vehicle age feature. Damage history is excluded.
-5. Split the data into training and test sets.
-6. Compare models with five-fold cross-validation.
-7. Evaluate the selected model on the test set and inspect its errors.
+## Model sonuçları
 
-Rows with the same basic vehicle details stay in the same group during splitting. This reduces overlap between training and test data.
+Ham veri **26.533 ilan ve 26 sütun** içerir. Temizleme sonrası **20.069 eğitim** ve **5.011 test** ilanı kullanılır. Benzer araç özellikleri aynı grupta tutulur; eğitim ve test grupları kesişmez. Eksik değer doldurma, kodlama ve ölçekleme eğitim katları içinde öğrenilir.
 
-Missing numbers are filled with training-fold medians. Missing categories are filled with training-fold modes. Categories are one-hot encoded, and numeric features are scaled. These steps run inside a pipeline.
+Modeller `log1p(price_try)` öğrenir. Aşağıdaki fiyat hataları tekrar TL ölçeğine dönüştürülen tahminlerden hesaplanır. Seçim ölçütü test sonucu değil, beş katlı gruplu çapraz doğrulamadaki ortalama MAE'dir.
 
-## Why Tramer Is Excluded
+| Model | CV MAE (TL) | Test MAE (TL) | Test RMSE (TL) | Test R² |
+| --- | ---: | ---: | ---: | ---: |
+| **CatBoost** | **134.451** | **128.155** | **293.529** | **0,9589** |
+| XGBoost | 141.666 | 136.375 | 315.408 | 0,9526 |
+| LightGBM | 143.306 | 138.119 | 335.300 | 0,9464 |
+| Ridge | 151.511 | 149.390 | 577.448 | 0,8411 |
+| Lasso | 220.172 | 223.372 | 745.725 | 0,7350 |
+| Medyan taban modeli | 682.787 | 691.303 | 1.462.958 | -0,0199 |
 
-The raw dataset includes damage claim amounts (`tramer_tl`), but their meaning and quality could not be verified. The final model does not use tramer, a missing-tramer flag, a claim flag, or log tramer. Damage-condition fields are also excluded.
+MAE ortalama mutlak hatadır; RMSE büyük hatalara daha fazla ağırlık verir. R² doğru tahmin yüzdesi değildir. Ayrıntılar [kaydedilmiş notebook](car_price_prediction.ipynb) ve [sonuç tablosunda](results/model_comparison.csv) bulunur.
 
-The raw CSV stays unchanged. Tramer is removed before duplicate checking in the prepared data. No tramer amount is changed to zero, capped, or used to remove training rows. No tramer feature is created.
+![CatBoost tahminleri ve artıklar](results/figure_2.png)
 
-**The estimate does not account for damage history, accident severity, or repair quality.** Similar model error does not mean that damage is unimportant in the real market.
+## İki fiyat aralığının farkı
 
-## Models and Results
+Orijinal test verisi araç gruplarına göre **2.500 kalibrasyon** ve **2.511 ayrı değerlendirme** ilanına ayrılır.
 
-The project compares Ridge, Lasso, XGBoost, LightGBM, and CatBoost. A median prediction is included as a simple baseline.
+| Gösterim | Hesaplama | Ölçülen ilan kapsamı |
+| --- | --- | ---: |
+| Dar MAPE bandı | Aynı marka/seri MAPE'si; yeterli örnek yoksa marka, ardından genel veri. Gösterim marjı %8–10 ile sınırlandırılır. | %59,9 |
+| %95 hedefli tahmin aralığı | Kalibrasyon gruplarındaki mutlak log-fiyat hatalarından sonlu örneklem düzeltmeli split conformal aralık. | %94,2 |
 
-Models learn log price. Predictions are converted back to TRY before calculating price errors. Model selection uses the lowest average cross-validation MAE, not the test score.
+Dar MAPE bandı istatistiksel güven aralığı değildir. %95 hedefi de her araç için garanti anlamına gelmez. Değerlendirme fiyatları kalibrasyonda kullanılmaz. Temsili fiyat etkileri gerçek SHAP değerleri değildir; Model sekmesindeki özellik önemleri ise 600 ayrı değerlendirme ilanında üç tekrarla ölçülmüştür.
 
-Results from the saved notebook run:
+## Proje düzeni
 
-| Model | CV MAE (TRY) | Test MAE (TRY) | Test R² (TRY) |
-|---|---:|---:|---:|
-| CatBoost | 134,451 | 128,155 | 0.9589 |
-| XGBoost | 141,666 | 136,375 | 0.9526 |
-| LightGBM | 143,306 | 138,119 | 0.9464 |
-| Ridge | 151,511 | 149,390 | 0.8411 |
-| Lasso | 220,172 | 223,372 | 0.7350 |
-| Median baseline | 682,787 | 691,303 | -0.0199 |
+```text
+.github/workflows/pages.yml    # Kontroller ve GitHub Pages yayını
+assets/preview.png            # README ekran görüntüsü
+data/car_dataset_raw.csv      # Değiştirilmemiş ham ilan verisi
+docs/                         # Web arayüzünün tek kaynak ve yayın klasörü
+results/                      # Gerekli eğitim/test verileri ve analiz sonuçları
+scripts/run_notebook.py       # Notebook'u Python kaynağından üretip çalıştırır
+web-interface/                # Model dışa aktarma, kalibrasyon ve kontrol araçları
+car_price_prediction.ipynb     # Kayıtlı analiz ve çıktılar
+car_price_prediction.py        # Notebook'un hücre biçimli Python kaynağı
+requirements.txt              # Analiz bağımlılıkları
+```
 
-**CatBoost was selected by cross-validation.** Its test RMSE was approximately **TRY 293,529**. The final training set has **20,069 rows**, and the test set has **5,011 rows**.
+`docs/` doğrudan yayınlanır; ikinci bir web kopyası veya frontend derleme adımı yoktur. Geliştirme ayrıntıları [web-interface/README.md](web-interface/README.md) dosyasındadır.
 
-MAE is the average absolute price error; lower is better. R² describes how well the predictions explain price variation. It is not a percentage of correct predictions.
+## GitHub Pages kurulumu — depo sahibi için
 
-![CatBoost predictions and residuals](outputs_car_price_simple/figure_2.png)
+Bu işlem yalnızca ilk kurulumda gerekir. Sonrasında ziyaretçiler uygulamayı bağlantıdan doğrudan kullanır.
 
-## Files
+1. Bu klasörün güncel içeriğini, `.github/` dahil, deponun varsayılan dalına yükleyin. Eski dosyaları korumak yerine yeni klasör düzenini esas alın.
+2. Depoda **Settings → Pages → Build and deployment → Source → GitHub Actions** seçin.
+3. **Actions → Check and deploy GitHub Pages** iş akışını varsayılan dalda çalıştırın veya o dala yeni bir commit gönderin.
+4. İş akışı tamamlandığında [canlı uygulama adresini](https://hsynkrdmn.github.io/used-car-price-prediction/) açın. Aynı adresi deponun **About → Website** alanına ekleyin. Bağlantı README'nin başında da yer alır.
 
-| File | Description |
-|---|---|
-| [car-price-prediction.ipynb](car-price-prediction.ipynb) | Main notebook with saved outputs |
-| [car_price_prediction.py](car_price_prediction.py) | Python version of the notebook cells |
-| `car_dataset_raw.csv` | Original dataset |
-| `requirements-car-price.txt` | Package versions used for the project |
-| `run_simple_notebook.py` | Builds and runs the notebook from the Python file |
-| `outputs_car_price_simple/` | Result tables, data files, and figures |
-| `docs/` | Browser demo files |
-| `web-interface/` | Web source, exporter, and prediction checks |
+İş akışı tahmin ve dosya kontrolleri geçtikten sonra yalnızca `docs/` içeriğini yayınlar. Ham veri, notebook ve geliştirme araçları siteye yüklenmez. Pull request'lerde kontroller çalışır; yayın yalnızca varsayılan daldan yapılır.
 
-In the output folder, `car_dataset_cleaned.csv` contains **only the cleaned training subset**. The full prepared data and the test subset are saved separately as `car_dataset_prepared.csv` and `car_dataset_test.csv`.
+GitHub Pages ayarının etkinleştirilmesi dosya yüklemekten ayrı bir adımdır. [Resmî kurulum yönergesi](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
 
-## How to Run
+## Yerel çalıştırma
 
-### Web interface
-
-The [MotorValue interface](web-interface/README.md) gives the model an English web form. It includes vehicle selection, a price estimate, model results, and data notes.
-
-The trained CatBoost model runs in the browser. There is no separate prediction server.
+Web arayüzü için proje kökünde:
 
 ```bash
 python -m http.server 8080 --directory docs
 ```
 
-Open `http://localhost:8080` in a browser. Typical vehicle specs are filled from the dataset, so check them before estimating.
+Tarayıcıda `http://localhost:8080` adresini açın. HTML dosyasına çift tıklamak yerine HTTP sunucusu kullanın.
 
-### Analysis notebook
-
-The saved analysis was run with Python 3.14.6 and the package versions in `requirements-car-price.txt`.
-
-1. Download the project and open its folder in a terminal.
-2. Install the packages and Jupyter Notebook:
-
-   ```bash
-   python -m pip install -r requirements-car-price.txt notebook
-   ```
-
-3. Keep `car_dataset_raw.csv` in the same folder as the notebook.
-4. Open `car-price-analysis-simple.ipynb` in Jupyter or VS Code and run all cells in order.
-
-To rebuild and run the notebook from the Python file:
+Analizi yeniden çalıştırmak için:
 
 ```bash
-python run_simple_notebook.py
+python -m pip install -r requirements.txt notebook
+python scripts/run_notebook.py
 ```
 
-## Limitations
+Alternatif olarak `car_price_prediction.ipynb` dosyasını proje kökünde çalışan Jupyter ile açabilirsiniz. Notebook'u yeniden çalıştırmak, kaydedilmiş sonuçları ve eğitim/test dosyalarını yeniler; web modelini yenilemek için ayrıca dışa aktarma adımını uygulayın.
 
-- Damage history and condition are not model inputs. The estimate cannot measure a damage discount.
-- Some raw tramer values may contain collection errors; they are excluded from the final workflow.
-- Vehicle groups use listing details, not unique vehicle IDs.
-- There are no listing dates, so the test does not measure performance on a future market.
-- The models use mostly default settings. Hyperparameter tuning may improve the results.
-- This is an educational project, not a professional vehicle valuation.
+## Kontroller ve web modelini yenileme
+
+Web kontrolleri Node.js 24 ile çalışır; `npm install` gerekmez:
+
+```bash
+node web-interface/check_site.cjs
+node web-interface/check_predictions.cjs
+node web-interface/check_intervals.cjs
+node web-interface/check_analytics.cjs
+```
+
+Modeli analiz kaynağından yeniden eğitip tarayıcıya aktarmak için Python bağımlılıkları ve Node.js gerekir:
+
+```bash
+python web-interface/export_model.py
+```
+
+Bu işlem `docs/` içindeki model, katalog, kalibrasyon ve analiz dosyalarını birlikte yeniler. Sonrasında kontrolleri tekrar çalıştırın. Yalnızca mevcut modelin analiz verilerini yenilemek için `node web-interface/build_analytics.cjs` kullanılabilir.
+
+## Sınırlamalar
+
+- Hedef, gerçekleşen satış fiyatı değil ilan fiyatıdır.
+- Tramer ve hasar/kondisyon sütunları güvenilirlikleri doğrulanamadığı için dışlanmıştır. Ham veriler değiştirilmez; Tramer miktarına göre eğitim satırı silinmez.
+- Hasar geçmişi, onarım kalitesi, konum ve fiziksel kondisyon tahmine dahil değildir.
+- İlan tarihleri yoktur. Yüksek test R²'si bugünkü veya gelecekteki piyasa performansını kanıtlamaz.
+- Kapsam, fiyatı 100.000–100.000.000 TL aralığındaki hazırlanmış ilanlardır; yaş hesabında referans yıl 2026'dır.
+- Gruplar araç özelliklerinden türetilir; benzersiz araç kimliği veya VIN yerine geçmez. Proje profesyonel ekspertiz ya da satış garantisi sunmaz.

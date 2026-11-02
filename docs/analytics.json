@@ -1,0 +1,319 @@
+{
+  "method": "measured_mape_display_band",
+  "min_margin": 0.08,
+  "max_margin": 0.1,
+  "series_min_rows": 30,
+  "brand_min_rows": 50,
+  "series_mape": [
+    {
+      "brand": "Renault",
+      "series": "Clio",
+      "rows": 43,
+      "mape": 0.11703245542897311
+    },
+    {
+      "brand": "Peugeot",
+      "series": "3008",
+      "rows": 37,
+      "mape": 0.05310361503123484
+    },
+    {
+      "brand": "Fiat",
+      "series": "Egea",
+      "rows": 52,
+      "mape": 0.06113479519900082
+    },
+    {
+      "brand": "BMW",
+      "series": "3 Serisi",
+      "rows": 41,
+      "mape": 0.08631822347620574
+    },
+    {
+      "brand": "Honda",
+      "series": "Civic",
+      "rows": 75,
+      "mape": 0.09835066661839292
+    },
+    {
+      "brand": "Nissan",
+      "series": "Qashqai",
+      "rows": 67,
+      "mape": 0.0802563835805097
+    },
+    {
+      "brand": "Hyundai",
+      "series": "Tucson",
+      "rows": 61,
+      "mape": 0.06464560420913193
+    },
+    {
+      "brand": "Kia",
+      "series": "Sportage",
+      "rows": 71,
+      "mape": 0.06758215345775942
+    },
+    {
+      "brand": "Opel",
+      "series": "Mokka",
+      "rows": 34,
+      "mape": 0.06744364998065494
+    },
+    {
+      "brand": "Volkswagen",
+      "series": "Tiguan",
+      "rows": 63,
+      "mape": 0.07041145969236477
+    },
+    {
+      "brand": "Ford",
+      "series": "Focus",
+      "rows": 61,
+      "mape": 0.10689343371444707
+    },
+    {
+      "brand": "Toyota",
+      "series": "Corolla",
+      "rows": 75,
+      "mape": 0.08765090187148639
+    },
+    {
+      "brand": "Volkswagen",
+      "series": "Passat",
+      "rows": 31,
+      "mape": 0.08743617922712633
+    },
+    {
+      "brand": "Mercedes - Benz",
+      "series": "C",
+      "rows": 36,
+      "mape": 0.12512790740586513
+    },
+    {
+      "brand": "Opel",
+      "series": "Corsa",
+      "rows": 37,
+      "mape": 0.07892716422967577
+    },
+    {
+      "brand": "Peugeot",
+      "series": "2008",
+      "rows": 39,
+      "mape": 0.07147092041740113
+    },
+    {
+      "brand": "Dacia",
+      "series": "Duster",
+      "rows": 83,
+      "mape": 0.08796451020037868
+    },
+    {
+      "brand": "Ford",
+      "series": "Kuga",
+      "rows": 43,
+      "mape": 0.05385999441991967
+    },
+    {
+      "brand": "Opel",
+      "series": "Astra",
+      "rows": 50,
+      "mape": 0.12228132136832844
+    },
+    {
+      "brand": "Renault",
+      "series": "Megane",
+      "rows": 30,
+      "mape": 0.10878588729220666
+    }
+  ],
+  "brand_mape": [
+    {
+      "brand": "Renault",
+      "rows": 99,
+      "mape": 0.11080862415330028
+    },
+    {
+      "brand": "Peugeot",
+      "rows": 200,
+      "mape": 0.10956895177510209
+    },
+    {
+      "brand": "Fiat",
+      "rows": 108,
+      "mape": 0.09728339034532081
+    },
+    {
+      "brand": "BMW",
+      "rows": 96,
+      "mape": 0.10181064197735894
+    },
+    {
+      "brand": "Honda",
+      "rows": 91,
+      "mape": 0.09724275857222843
+    },
+    {
+      "brand": "Land Rover",
+      "rows": 81,
+      "mape": 0.12244165856166524
+    },
+    {
+      "brand": "Chery",
+      "rows": 118,
+      "mape": 0.04978730709448155
+    },
+    {
+      "brand": "Nissan",
+      "rows": 129,
+      "mape": 0.10953883720922039
+    },
+    {
+      "brand": "Hyundai",
+      "rows": 185,
+      "mape": 0.09319961644629557
+    },
+    {
+      "brand": "Kia",
+      "rows": 127,
+      "mape": 0.07670874390419091
+    },
+    {
+      "brand": "Opel",
+      "rows": 200,
+      "mape": 0.09739629431212654
+    },
+    {
+      "brand": "Volkswagen",
+      "rows": 203,
+      "mape": 0.08690684842492029
+    },
+    {
+      "brand": "Ford",
+      "rows": 201,
+      "mape": 0.09434658891593889
+    },
+    {
+      "brand": "Toyota",
+      "rows": 90,
+      "mape": 0.08787383315618798
+    },
+    {
+      "brand": "Mercedes - Benz",
+      "rows": 97,
+      "mape": 0.15867386062645977
+    },
+    {
+      "brand": "Skoda",
+      "rows": 67,
+      "mape": 0.10359489073038532
+    },
+    {
+      "brand": "Audi",
+      "rows": 71,
+      "mape": 0.09697967528625558
+    },
+    {
+      "brand": "Dacia",
+      "rows": 105,
+      "mape": 0.08701746538374121
+    }
+  ],
+  "global_mape": {
+    "rows": 2500,
+    "mape": 0.10248236413422866
+  },
+  "test_mape": 0.10342477355440671,
+  "evaluation_rows": 2511,
+  "model_sha256": "12f5b6753161fedbfb2e7bb5633a75a90abdfed39ea0c6525889484b7531d28e",
+  "band_evaluation_coverage": 0.5989645559538033,
+  "importance": {
+    "method": "held_out_permutation_mae",
+    "sample_rows": 600,
+    "repeats": 3,
+    "baseline_mae": 137670.26654809166,
+    "features": [
+      {
+        "id": "age",
+        "group": "numeric",
+        "columns": [
+          "year"
+        ],
+        "mae_increase": 342241.8794023471
+      },
+      {
+        "id": "power",
+        "group": "numeric",
+        "columns": [
+          "engine_power_hp"
+        ],
+        "mae_increase": 213691.92359766192
+      },
+      {
+        "id": "identity",
+        "group": "categorical",
+        "columns": [
+          "brand",
+          "series",
+          "model"
+        ],
+        "mae_increase": 188345.3795143702
+      },
+      {
+        "id": "mileage",
+        "group": "numeric",
+        "columns": [
+          "mileage_km"
+        ],
+        "mae_increase": 187272.49238915052
+      },
+      {
+        "id": "transmission",
+        "group": "categorical",
+        "columns": [
+          "transmission"
+        ],
+        "mae_increase": 63552.424710212355
+      },
+      {
+        "id": "engine",
+        "group": "numeric",
+        "columns": [
+          "engine_displacement_cc"
+        ],
+        "mae_increase": 61731.928997887124
+      },
+      {
+        "id": "drive",
+        "group": "categorical",
+        "columns": [
+          "drivetrain"
+        ],
+        "mae_increase": 45307.26740546376
+      },
+      {
+        "id": "fuel",
+        "group": "categorical",
+        "columns": [
+          "fuel_type"
+        ],
+        "mae_increase": 21261.155734671058
+      },
+      {
+        "id": "body",
+        "group": "categorical",
+        "columns": [
+          "body_type"
+        ],
+        "mae_increase": 17409.962031303236
+      },
+      {
+        "id": "colour",
+        "group": "categorical",
+        "columns": [
+          "color"
+        ],
+        "mae_increase": -45.131801491894294
+      }
+    ]
+  }
+}

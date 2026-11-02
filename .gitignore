@@ -1,0 +1,31 @@
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+node_modules/
+catboost_info/
+*.log
+.env
+.env.*
+!.env.example
+.openai/
+# Local editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Reproducible notebook artifacts not needed in the repository
+results/car_dataset_prepared.csv
+results/test_predictions.csv
+results/figure_1.png
+
+# Temporary CatBoost export intermediates
+web-interface/catboost-export.json
+web-interface/interval-inputs.json
+
+# Local archives and obsolete build copies
+*.zip
+web-interface/dist/

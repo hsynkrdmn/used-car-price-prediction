@@ -4,6 +4,7 @@ import contextlib
 import io
 import json
 import re
+import subprocess
 
 import matplotlib
 matplotlib.use("Agg")
@@ -16,7 +17,7 @@ from sklearn.metrics import mean_absolute_error, root_mean_squared_error, r2_sco
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-DIST = HERE / "dist"
+DIST = ROOT / "docs"
 
 
 def clean_json(value):
@@ -41,7 +42,7 @@ def write_json(path, data):
 def main():
     import os
     os.chdir(ROOT)
-    source = (ROOT / "car_price_analysis_simple.py").read_text(encoding="utf-8")
+    source = (ROOT / "car_price_prediction.py").read_text(encoding="utf-8")
     parts = re.split(r"(?m)^# %%([^\n]*)\n", source)
     namespace = {"__name__": "model_export"}
     plt.show = lambda *args, **kwargs: plt.close("all")
@@ -119,7 +120,7 @@ def main():
                for name in namespace["categorical_columns"]}
     initial = next((item for item in catalog if item["brand"] == "Volkswagen"
                     and item["series"] == "Golf" and "1.4 TSi Highline" in item["model"]), catalog[0])
-    comparison = pd.read_csv(ROOT / "outputs_car_price_simple" / "model_comparison.csv")
+    comparison = pd.read_csv(ROOT / "results" / "model_comparison.csv")
     metadata = {
         "model_name": "CatBoost", "tree_count": len(trees),
         "reference_year": namespace["REFERENCE_YEAR"],
@@ -142,6 +143,16 @@ def main():
         fixtures.append({"input": form, "features": row.to_dict(),
                          "expected": float(np.expm1(pipeline.predict(examples.loc[[index]]))[0])})
     write_json(HERE / "prediction-fixtures.json", fixtures)
+    # Use this run's held-out rows so intervals always match the exported model.
+    interval_inputs = HERE / "interval-inputs.json"
+    write_json(interval_inputs, data.loc[namespace["X_test"].index].to_dict(orient="records"))
+    try:
+        subprocess.run(["node", str(HERE / "calibrate_interval.cjs"),
+                        "--input", str(interval_inputs)], check=True)
+        subprocess.run(["node", str(HERE / "build_analytics.cjs"),
+                        "--input", str(interval_inputs)], check=True)
+    finally:
+        interval_inputs.unlink(missing_ok=True)
     print(json.dumps({"trees": len(trees), "model_bytes": (DIST / 'model.json').stat().st_size,
                       "catalog_items": len(catalog), "test_r2": metadata["test_r2"],
                       "test_mae": metadata["test_mae"]}, indent=2))

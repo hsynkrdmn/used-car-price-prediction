@@ -42,8 +42,8 @@ TEST_SIZE = 0.20
 CV_FOLDS = 5
 MODEL_THREADS = 4
 
-DATA_PATH = Path("car_dataset_raw.csv")
-OUTPUT_DIR = Path("outputs_car_price_simple")
+DATA_PATH = Path("data/car_dataset_raw.csv")
+OUTPUT_DIR = Path("results")
 
 # Price bounds define the population covered by this project.
 MIN_PRICE = 100_000

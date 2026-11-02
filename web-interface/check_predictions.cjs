@@ -1,8 +1,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
-const predictor = require('./dist/predictor.js');
-const model = JSON.parse(fs.readFileSync(path.join(__dirname, 'dist/model.json'), 'utf8'));
+const predictor = require('../docs/predictor.js');
+const model = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/model.json'), 'utf8'));
 const fixtures = JSON.parse(fs.readFileSync(path.join(__dirname, 'prediction-fixtures.json'), 'utf8'));
 let largestDifference = 0;
 for (const fixture of fixtures) {

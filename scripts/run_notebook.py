@@ -1,6 +1,7 @@
 """Build and execute the English notebook from its percent-cell Python source."""
 from pathlib import Path
 import re
+import os
 import io
 import traceback
 import nbformat
@@ -11,8 +12,9 @@ from IPython.core.interactiveshell import InteractiveShell
 from IPython.utils.capture import capture_output
 from IPython.display import Image, display
 
-root = Path(__file__).resolve().parent
-source = (root / "car_price_analysis_simple.py").read_text(encoding="utf-8")
+root = Path(__file__).resolve().parents[1]
+os.chdir(root)
+source = (root / "car_price_prediction.py").read_text(encoding="utf-8")
 parts = re.split(r"(?m)^# %%([^\n]*)\n", source)
 cells = []
 for index in range(1, len(parts), 2):
@@ -30,7 +32,7 @@ notebook = nbformat.v4.new_notebook(cells=cells)
 notebook.metadata.kernelspec = {
     "display_name": "Python 3 (ipykernel)", "language": "python", "name": "python3"
 }
-path = root / "car-price-analysis-simple.ipynb"
+path = root / "car_price_prediction.ipynb"
 nbformat.write(notebook, path)
 print(f"Created notebook with {len(cells)} cells.", flush=True)
 
@@ -43,7 +45,7 @@ def capture_show(*args, **kwargs):
         buffer = io.BytesIO()
         figure.savefig(buffer, format="png", bbox_inches="tight", dpi=110)
         figure_count += 1
-        output_dir = root / "outputs_car_price_simple"
+        output_dir = root / "results"
         output_dir.mkdir(exist_ok=True)
         (output_dir / f"figure_{figure_count}.png").write_bytes(buffer.getvalue())
         display(Image(data=buffer.getvalue()))

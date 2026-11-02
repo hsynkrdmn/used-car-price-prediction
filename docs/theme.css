@@ -1,0 +1,117 @@
+/* Editorial layer: sage and clay accents, compact results. */
+:root {
+  --ink: #253e39;
+  --muted: #64726a;
+  --paper: #f7f5ef;
+  --line: #dfe3da;
+  --accent: #a65435;
+}
+.site-header { min-height:96px; }
+.personal-brand { min-width:290px; }
+.personal-brand strong { display:block; font-size:21px; line-height:1.3; font-weight:650; letter-spacing:-.6px; }
+.personal-brand .brand-divider { display:none; }
+.personal-brand .brand-discipline { display:block; font-size:11px; letter-spacing:.25px; margin-top:4px; }
+.main-nav a.active { color:var(--accent); border-color:var(--accent); }
+.intro { display:block; padding:34px 0 32px; }
+.intro h1 { font-size:clamp(31px,3.5vw,43px); max-width:690px; line-height:1.13; }
+.intro .eyebrow { display:flex; align-items:center; gap:9px; }
+.intro .eyebrow::before { content:""; display:block; width:22px; height:2px; background:#bd7f55; }
+.intro-description { font-size:13px; margin-top:15px; }
+.intro .market-label { display:block; max-width:none; margin-top:14px; font-size:10px; color:#7b8277; }
+.workspace { grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:22px 26px; }
+.panel { border-radius:8px; }
+.vehicle-form { padding:23px 26px 25px; border-top:3px solid #c58d6e; box-shadow:0 3px 12px #253e3905; }
+.heading-label { display:flex; align-items:center; gap:9px; min-width:0; }
+.section-icon { width:23px; height:23px; flex-shrink:0; color:#a86b4b; }
+.form-intro { margin:9px 0 23px; }
+input[type=number], select { border-radius:5px; border-color:#d9ded5; background-color:#fdfefb; }
+.advanced-details summary { color:#56695d; }
+.estimate-button { background:#345b4d; border-color:#345b4d; border-radius:5px; padding:13px 16px; transition:background .18s, box-shadow .18s; }
+.estimate-button:hover:not(:disabled) { background:#244a3c; box-shadow:0 3px 9px #27473718; }
+.estimate-card { padding:23px 25px 20px; background:#fff; border:1px solid var(--line); border-top:3px solid #638773; border-radius:8px; box-shadow:0 3px 12px #253e3905; }
+.estimate-card .section-icon { color:#638773; }
+.estimate-card h2 { font-size:16px; }
+.result-state { font-size:10px; margin:7px 0 14px; line-height:1.5; }
+.vehicle-summary { display:flex; flex-wrap:wrap; align-items:baseline; gap:3px 10px; border:0; padding:0; margin:0 0 13px; }
+.vehicle-summary strong { font-size:12px; font-weight:600; }
+.vehicle-summary span { font-size:11px; margin:0; }
+.price-value { font-size:clamp(35px,4vw,49px); margin:0 0 20px; color:#2e5747; }
+#result-empty .empty-price { color:#a3b2a3; margin-bottom:16px; }
+#result-empty>p:last-child { margin-bottom:22px; }
+.prediction-range { background:#f0f4ec; border:1px solid #e3eadc; padding:15px 17px; border-radius:6px; }
+.range-heading { gap:6px 12px; }
+.range-heading h3 { font-size:11px; color:#3f5e4b; }
+.range-heading a { font-size:9px; }
+.range-value { margin:10px 0 15px; font-size:clamp(18px,1.8vw,22px); color:#304e3e; }
+.range-line { background:#b4c5ad; height:3px; }
+.range-line span { background:#b46a43; top:-3px; box-shadow:0 0 0 3px #f0f4ec; }
+.range-line::before,.range-line::after { top:-2px; background:#8a9c82; }
+.range-note { font-size:10px; line-height:1.65; margin-top:12px; color:#5b6d5d; }
+.range-limit { font-size:9px; margin-top:7px; line-height:1.6; }
+.calibrated-details { margin-top:12px; border:1px solid #dce6e6; border-radius:5px; background:#f7faf9; }
+.calibrated-details summary { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:11px 14px; list-style:none; color:#3d6666; font-size:11px; cursor:pointer; }
+.calibrated-details summary::-webkit-details-marker { display:none; }
+.calibrated-details[open] .details-plus { transform:rotate(45deg); }
+.calibrated-body { padding:0 14px 13px; }
+.calibrated-body h3 { font-size:11px; margin:0; font-weight:500; color:#527272; }
+.calibrated-range { font-size:23px; font-weight:500; letter-spacing:-.5px; font-variant-numeric:tabular-nums; margin:8px 0; color:#2e5557; }
+.calibrated-body>p:last-child { color:#607876; font-size:10px; line-height:1.75; margin:0; }
+.estimate-actions { margin:15px 0 0; gap:22px; }
+.estimate-actions button { font-size:11px; }
+.result-note { max-width:none; font-size:10px; line-height:1.7; margin:10px 4px 4px; }
+.results-column>.text-link { margin-left:4px; font-size:11px; }
+.impact-card { grid-column:1/-1; margin:0; padding:17px 22px 15px; border-left:3px solid #bd896b; }
+.impact-heading { align-items:center; }
+.impact-heading h2 { font-size:15px; }
+.impact-list { grid-template-columns:repeat(3,minmax(0,1fr)); gap:13px; margin:13px 0 10px; }
+.impact-list li { flex-direction:column; gap:3px; padding:10px 13px; border-radius:5px; font-size:11px; }
+.impact-list strong { font-size:22px; font-weight:500; letter-spacing:-.7px; }
+.impact-note { font-size:10px; line-height:1.6; }
+.stat-grid { gap:15px; border:0; }
+.stat-card { border:1px solid #dce4d7; border-radius:7px; padding:20px 22px; background:#f0f4ec; }
+.stat-card:nth-child(2) { background:#f7eee6; border-color:#e9ded2; }
+.stat-card:nth-child(3) { background:#edf3f3; border-color:#dce5e5; }
+.stat-card:nth-child(4) { background:#f2f0e7; border-color:#e5e2d4; }
+.stat-card strong { color:#345748; }
+.model-table-panel { border-top:3px solid #638773; }
+.importance-insight { color:#355f50; font-size:13px; line-height:1.8; padding:14px 17px; border-left:3px solid #769983; background:#edf3ec; border-radius:0 5px 5px 0; margin:15px 0; }
+.importance-panel:first-child .importance-track span:not(.negative-importance) { background:#557d71; }
+.importance-panel:last-child .importance-track span:not(.negative-importance) { background:#bd7f55; }
+.notes-layout { gap:25px; }
+.notes-card { padding:25px; background:#fff; border:1px solid var(--line); border-radius:7px; }
+@media(max-width:1020px) {
+  .site-header { padding-top:17px; }
+  .intro h1 { font-size:36px; }
+  .vehicle-form, .estimate-card { padding-left:20px; padding-right:20px; }
+  .workspace { gap:20px; }
+}
+@media(max-width:700px) {
+  .personal-brand { min-width:0; max-width:225px; }
+  .personal-brand strong { font-size:19px; }
+  .personal-brand .brand-discipline { font-size:10px; }
+  .intro { padding:28px 0; }
+  .intro h1 { font-size:28px; }
+  .intro .eyebrow { font-size:8px; letter-spacing:1px; }
+  .intro .eyebrow::before { width:12px; }
+  .intro-description { font-size:12px; margin-top:11px; }
+  .intro .market-label { font-size:9px; margin-top:10px; }
+  .workspace { grid-template-columns:1fr; gap:18px; }
+  .vehicle-form, .estimate-card { padding:21px 20px; }
+  .price-value { font-size:43px; }
+  .range-value { font-size:21px; }
+  .impact-card { padding:16px; }
+  .impact-list { grid-template-columns:1fr; gap:8px; }
+  .impact-list li { flex-direction:row; align-items:center; gap:12px; }
+  .impact-list strong { font-size:18px; }
+  .stat-grid { gap:10px; }
+  .stat-card { padding:16px; }
+  .stat-card span { font-size:11px; }
+  .importance-insight { font-size:12px; }
+  .notes-card { padding:22px; }
+}
+@media(max-width:370px) {
+  .intro h1 { font-size:30px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after { animation:none!important; transition:none!important; }
+}

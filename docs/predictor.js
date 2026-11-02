@@ -68,7 +68,48 @@
     return predictFeatures(prepareInput(input, referenceYear), model);
   }
 
-  const api = { prepareInput, encode, predictFeatures, predict };
+  function predictionInterval(prediction, calibration) {
+    if (!Number.isFinite(prediction) || prediction <= 0
+        || calibration?.method !== 'group_split_conformal_log'
+        || !Number.isFinite(calibration.log_radius) || calibration.log_radius < 0
+        || !(calibration.coverage > 0 && calibration.coverage < 1)) {
+      throw new Error('Prediction interval is unavailable.');
+    }
+    const centre = Math.log1p(prediction);
+    return {
+      lower: Math.max(0, Math.expm1(centre - calibration.log_radius)),
+      upper: Math.expm1(centre + calibration.log_radius),
+      coverage: calibration.coverage,
+    };
+  }
+
+  function mapeBand(prediction, input, analytics) {
+    if (!Number.isFinite(prediction) || prediction <= 0 || analytics?.method !== 'measured_mape_display_band') {
+      throw new Error('MAPE band is unavailable.');
+    }
+    const series = analytics.series_mape.find(item => item.brand === input.brand && item.series === input.series);
+    const brand = analytics.brand_mape.find(item => item.brand === input.brand);
+    const cohort = series || brand || analytics.global_mape;
+    const margin = Math.min(analytics.max_margin, Math.max(analytics.min_margin, cohort.mape));
+    return { lower: prediction * (1 - margin), upper: prediction * (1 + margin),
+      margin, measured_mape: cohort.mape, sample_rows: cohort.rows,
+      source: series ? 'series' : brand ? 'brand' : 'global' };
+  }
+
+  // Illustrative effects for the requested SHAP-style UI, not computed SHAP values.
+  function simulatedImpacts(input, prediction, referenceYear = 2026) {
+    const age = Math.max(0, referenceYear - Number(input.year));
+    const premium = /highline|premium|amg|m sport|executive|sportline|style|icon|prestige|titanium|s.line|r.line/i.test(input.model);
+    const basic = /basic|joy|trendline|entry|impression|midline/i.test(input.model);
+    const round = value => Math.round(value / 1000) * 1000;
+    return [
+      { id: 'trim', value: round(prediction * (premium ? 0.046 : basic ? -0.018 : 0.012)) },
+      { id: 'mileage', value: round(prediction * Math.max(-0.14, Math.min(0.07, (60000 - Number(input.mileage_km)) / 1800000))) },
+      { id: 'age', value: round(prediction * Math.max(-0.14, Math.min(0.06, (5 - age) * 0.006))) },
+    ];
+  }
+
+  const api = { prepareInput, encode, predictFeatures, predict, predictionInterval, mapeBand, simulatedImpacts };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.CarPredictor = api;
 })(typeof globalThis !== "undefined" ? globalThis : this);
