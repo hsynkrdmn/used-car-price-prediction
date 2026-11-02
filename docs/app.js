@@ -63,15 +63,14 @@ function fillDefaults() {
   $('form-hint').textContent = t(state.hint);
   markDirty();
 }
-function useExample(showMessage = true) {
+function initializeVehicle() {
   if (!state.metadata) return;
   const example = state.metadata.initial;
   $('brand').value = example.brand;
   fillSeries(example.series, example.model);
   clearResult();
-  state.hint = 'exampleHint';
+  state.hint = 'defaultsHint';
   $('form-hint').textContent = t(state.hint);
-  if (showMessage) toast('exampleToast');
 }
 function readInput() {
   const input = {};
@@ -184,6 +183,13 @@ function renderModelInformation() {
   $('band-evaluation').textContent = t('bandEvaluation', { rows: number(analytics.evaluation_rows), coverage: number(analytics.band_evaluation_coverage * 100, 1) });
   $('coverage-note').textContent = t('coverage', { raw: number(metadata.raw_rows), train: number(metadata.training_rows), test: number(metadata.test_rows), year: metadata.reference_year });
 }
+function renderTheme() {
+  const light = document.documentElement.dataset.theme === 'light';
+  const action = t(light ? 'switchToDark' : 'switchToLight');
+  $('theme-toggle').setAttribute('aria-label', action);
+  $('theme-toggle').title = action;
+  document.querySelector('meta[name="theme-color"]').content = light ? '#f3f5f9' : '#101419';
+}
 function setLanguage(language) {
   state.language = language === 'en' ? 'en' : 'tr';
   try { localStorage.setItem('car-analysis-language', state.language); } catch {}
@@ -198,7 +204,7 @@ function setLanguage(language) {
   $('model-status-text').textContent = t(state.status);
   $('form-hint').textContent = t(state.hint);
   $('toast').hidden = true;
-  renderError(); renderModelInformation(); renderResult();
+  renderTheme(); renderError(); renderModelInformation(); renderResult();
 }
 function toast(key) {
   clearTimeout(state.timer);
@@ -220,7 +226,12 @@ $('series').addEventListener('change', () => fillModels());
 $('model').addEventListener('change', fillDefaults);
 $('vehicle-form').addEventListener('input', markDirty);
 $('vehicle-form').addEventListener('change', markDirty);
-$('use-example').addEventListener('click', () => useExample());
+$('theme-toggle').addEventListener('click', () => {
+  const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = theme;
+  try { localStorage.setItem('car-analysis-theme', theme); } catch {}
+  renderTheme();
+});
 $('reset-estimate').addEventListener('click', clearResult);
 for (const button of document.querySelectorAll('[data-lang]')) button.addEventListener('click', () => setLanguage(button.dataset.lang));
 $('copy-estimate').addEventListener('click', async () => {
@@ -265,8 +276,8 @@ setLanguage(state.language); route();
     $('year').max = state.metadata.reference_year + 1;
     for (const name of ['transmission', 'fuel_type', 'body_type', 'drivetrain', 'color']) selectOptions(name, state.metadata.options[name]);
     selectOptions('brand', unique(state.metadata.catalog.map(item => item.brand)));
-    useExample(false); renderModelInformation();
-    $('estimate-button').disabled = false; $('use-example').disabled = false;
+    initializeVehicle(); renderModelInformation();
+    $('estimate-button').disabled = false;
     state.status = 'ready'; $('model-status').classList.add('ready'); $('model-status-text').textContent = t(state.status);
   } catch {
     state.status = 'unavailable'; state.error = 'loadError'; $('model-status').classList.add('failed');

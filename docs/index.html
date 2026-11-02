@@ -1,9 +1,14 @@
 <!doctype html>
-<html lang="tr">
+<html lang="tr" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f5f3ee">
+  <meta name="theme-color" content="#101419">
+  <script>
+    try {
+      document.documentElement.dataset.theme = localStorage.getItem('car-analysis-theme') === 'light' ? 'light' : 'dark';
+    } catch {}
+  </script>
   <meta name="description" content="Türkiye ikinci el araç piyasası için fiyat analizi ve model sonuçları.">
   <title>İkinci El Araç Piyasa Değeri Analizi | Hüseyin Karaduman</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -22,6 +27,10 @@
       <a href="#notes" data-page="notes" data-i18n="about">Veri hakkında</a>
     </nav>
     <div class="header-tools">
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Açık temaya geç" title="Açık temaya geç">
+        <svg class="theme-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>
+        <svg class="theme-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/></svg>
+      </button>
       <div class="language-switch" role="group" data-i18n-aria-label="language" aria-label="Dil seçimi"><button type="button" data-lang="tr" aria-pressed="true" lang="tr">TR</button><span aria-hidden="true">|</span><button type="button" data-lang="en" aria-pressed="false" lang="en">ENG</button></div>
       <div class="model-status" id="model-status" role="status"><span class="status-dot"></span><span id="model-status-text" data-i18n="loading">Yükleniyor…</span></div>
     </div>
@@ -33,7 +42,7 @@
       </div>
       <div class="workspace">
         <form class="vehicle-form panel" id="vehicle-form">
-          <div class="panel-heading"><div class="heading-label"><svg class="section-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 10 2-5h10l2 5m-15 0h16v8H4zM7 18v2m10-2v2M7 14h2m6 0h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><h2 data-i18n="vehicleDetails">Araç bilgileri</h2></div><button class="text-button" type="button" id="use-example" data-i18n="example" disabled>Örnek yükle</button></div>
+          <div class="panel-heading"><div class="heading-label"><svg class="section-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 10 2-5h10l2 5m-15 0h16v8H4zM7 18v2m10-2v2M7 14h2m6 0h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><h2 data-i18n="vehicleDetails">Araç bilgileri</h2></div></div>
           <p class="form-intro" id="form-hint"></p>
           <div class="form-grid">
             <label class="field"><span data-i18n="brand">Marka</span><select id="brand" name="brand" required disabled></select></label>

@@ -1,114 +1,114 @@
-# İkinci El Araç Piyasa Değeri Analizi
+# Used Car Market Value Analysis
 
 **[Hüseyin Karaduman](https://github.com/hsynkrdmn) · Data Science & Analytics · B.Sc. Statistics**
 
-Türkiye ikinci el araç ilanları üzerinde veri temizleme, model karşılaştırması ve fiyat tahmini. Eğitilmiş CatBoost modeli web arayüzünde doğrudan tarayıcıda çalışır; ziyaretçinin Python, API anahtarı veya IDE kullanması gerekmez.
+Data cleaning, model comparison and price estimation for used car listings in Türkiye. The trained CatBoost model runs directly in the browser: visitors need no Python installation, API key or IDE.
 
-## Web uygulamasını kullanma
+## Try the application
 
 <!-- live-demo:start -->
-**[İnteraktif web uygulamasını aç](https://hsynkrdmn.github.io/used-car-price-prediction/)** · [GitHub deposu](https://github.com/hsynkrdmn/used-car-price-prediction)
+**[Open the interactive application](https://hsynkrdmn.github.io/used-car-price-prediction/)** · [GitHub repository](https://github.com/hsynkrdmn/used-car-price-prediction)
 
-Uygulama GitHub Pages üzerinde yayındadır. Kurulum veya IDE gerekmez; bağlantıyı açıp doğrudan tarayıcıda kullanabilirsiniz. Yayın kontrolleri [GitHub Actions](https://github.com/hsynkrdmn/used-car-price-prediction/actions/workflows/pages.yml) üzerinden izlenebilir.
+The application is live on GitHub Pages. Open the link and use it directly in your browser. Deployment checks are available in [GitHub Actions](https://github.com/hsynkrdmn/used-car-price-prediction/actions/workflows/pages.yml).
 <!-- live-demo:end -->
 
-Arayüz Türkçe ve İngilizce kullanılabilir. Marka, seri, donanım, yıl ve kilometre bilgilerini düzenleyip **Fiyatı hesapla** düğmesine basın. Otomatik doldurulan bilgileri aracınızla karşılaştırın.
+Choose Turkish or English, adjust the brand, series, trim, year and mileage, then select **Calculate estimate**. Check the prefilled specifications against your vehicle. The interface opens in dark mode; the sun/moon button switches to light mode. Language and theme preferences are remembered on your device.
 
-GitHub'ın dosya görüntüleyicisinde `index.html` dosyasını açmak uygulamayı çalıştırmaz. İnteraktif kullanım GitHub Pages bağlantısından yapılır.
+GitHub's file viewer does not run `index.html`. Use the GitHub Pages link for the interactive application.
 
-![Araç fiyat analizi arayüzü](assets/preview.png)
+![Used car price analysis interface in dark mode](assets/preview.png)
 
-## Arayüzde neler var?
+## Features
 
-- Gerçek CatBoost nokta tahmini; hesaplama tarayıcıda yapılır.
-- Benzer marka/seri gruplarının MAPE değerinden hesaplanan, %8–10 ile sınırlandırılmış gösterge bandı.
-- Ayrı açılır bölümde kalibre edilmiş, %95 kapsam hedefli tahmin aralığı.
-- Donanım, kilometre ve yaş için açıkça **simülasyon** olarak işaretlenen temsili fiyat etkileri.
-- Model sekmesinde CatBoost / LightGBM / XGBoost karşılaştırması ve ölçülen permütasyon önemi grafikleri.
-- Yerel olarak hatırlanan dil tercihi; araç bilgileri bir tahmin servisine gönderilmez.
+- Real CatBoost point predictions computed locally in the browser.
+- An indicative band based on MAPE for comparable brand/series groups, limited to an 8–10% display margin.
+- A separate, expandable calibrated prediction interval targeting 95% coverage.
+- Illustrative effects for trim, mileage and age, clearly labelled as **simulations**.
+- A Model tab with CatBoost / LightGBM / XGBoost comparisons and measured permutation importance charts.
+- Turkish and English interfaces, dark and light themes, and locally saved preferences. Vehicle details are not sent to a prediction service.
 
-## Model sonuçları
+## Model results
 
-Ham veri **26.533 ilan ve 26 sütun** içerir. Temizleme sonrası **20.069 eğitim** ve **5.011 test** ilanı kullanılır. Benzer araç özellikleri aynı grupta tutulur; eğitim ve test grupları kesişmez. Eksik değer doldurma, kodlama ve ölçekleme eğitim katları içinde öğrenilir.
+The raw dataset contains **26,533 listings and 26 columns**. After cleaning, **20,069 training** and **5,011 test** listings remain. Similar vehicle specifications are kept in the same group, with no overlap between training and test groups. Imputation, encoding and scaling are fitted within the training folds.
 
-Modeller `log1p(price_try)` öğrenir. Aşağıdaki fiyat hataları tekrar TL ölçeğine dönüştürülen tahminlerden hesaplanır. Seçim ölçütü test sonucu değil, beş katlı gruplu çapraz doğrulamadaki ortalama MAE'dir.
+Models learn `log1p(price_try)`. The price errors below are calculated after transforming predictions back to TRY. Model selection uses mean MAE from five-fold grouped cross-validation, rather than test-set performance.
 
-| Model | CV MAE (TL) | Test MAE (TL) | Test RMSE (TL) | Test R² |
+| Model | CV MAE (TRY) | Test MAE (TRY) | Test RMSE (TRY) | Test R² |
 | --- | ---: | ---: | ---: | ---: |
-| **CatBoost** | **134.451** | **128.155** | **293.529** | **0,9589** |
-| XGBoost | 141.666 | 136.375 | 315.408 | 0,9526 |
-| LightGBM | 143.306 | 138.119 | 335.300 | 0,9464 |
-| Ridge | 151.511 | 149.390 | 577.448 | 0,8411 |
-| Lasso | 220.172 | 223.372 | 745.725 | 0,7350 |
-| Medyan taban modeli | 682.787 | 691.303 | 1.462.958 | -0,0199 |
+| **CatBoost** | **134,451** | **128,155** | **293,529** | **0.9589** |
+| XGBoost | 141,666 | 136,375 | 315,408 | 0.9526 |
+| LightGBM | 143,306 | 138,119 | 335,300 | 0.9464 |
+| Ridge | 151,511 | 149,390 | 577,448 | 0.8411 |
+| Lasso | 220,172 | 223,372 | 745,725 | 0.7350 |
+| Median baseline | 682,787 | 691,303 | 1,462,958 | -0.0199 |
 
-MAE ortalama mutlak hatadır; RMSE büyük hatalara daha fazla ağırlık verir. R² doğru tahmin yüzdesi değildir. Ayrıntılar [kaydedilmiş notebook](car_price_prediction.ipynb) ve [sonuç tablosunda](results/model_comparison.csv) bulunur.
+MAE is the mean absolute error; RMSE gives more weight to large errors. R² is not the percentage of correct predictions. See the [saved notebook](car_price_prediction.ipynb) and [results table](results/model_comparison.csv) for details.
 
-![CatBoost tahminleri ve artıklar](results/figure_2.png)
+![CatBoost predictions and residuals](results/figure_2.png)
 
-## İki fiyat aralığının farkı
+## Understanding the two price ranges
 
-Orijinal test verisi araç gruplarına göre **2.500 kalibrasyon** ve **2.511 ayrı değerlendirme** ilanına ayrılır.
+The original test data is divided by vehicle group into **2,500 calibration** and **2,511 separate evaluation** listings.
 
-| Gösterim | Hesaplama | Ölçülen ilan kapsamı |
+| Display | Method | Observed listing coverage |
 | --- | --- | ---: |
-| Dar MAPE bandı | Aynı marka/seri MAPE'si; yeterli örnek yoksa marka, ardından genel veri. Gösterim marjı %8–10 ile sınırlandırılır. | %59,9 |
-| %95 hedefli tahmin aralığı | Kalibrasyon gruplarındaki mutlak log-fiyat hatalarından sonlu örneklem düzeltmeli split conformal aralık. | %94,2 |
+| Narrow MAPE band | Brand/series MAPE, falling back to brand and then global calibration data when samples are insufficient. The display margin is limited to 8–10%. | 59.9% |
+| Prediction interval targeting 95% coverage | Split conformal interval using absolute log-price errors in calibration groups, with a finite-sample correction. | 94.2% |
 
-Dar MAPE bandı istatistiksel güven aralığı değildir. %95 hedefi de her araç için garanti anlamına gelmez. Değerlendirme fiyatları kalibrasyonda kullanılmaz. Temsili fiyat etkileri gerçek SHAP değerleri değildir; Model sekmesindeki özellik önemleri ise 600 ayrı değerlendirme ilanında üç tekrarla ölçülmüştür.
+The narrow MAPE band is not a statistical confidence interval. The 95% target is not a guarantee for each vehicle. Evaluation prices are not used for calibration. Illustrative price effects are not computed SHAP values; feature importance in the Model tab is measured on 600 separate evaluation listings over three repeats.
 
-## Proje düzeni
+## Repository structure
 
 ```text
-.github/workflows/pages.yml    # Kontroller ve GitHub Pages yayını
-assets/preview.png            # README ekran görüntüsü
-data/car_dataset_raw.csv      # Değiştirilmemiş ham ilan verisi
-docs/                         # Web arayüzünün tek kaynak ve yayın klasörü
-results/                      # Gerekli eğitim/test verileri ve analiz sonuçları
-scripts/run_notebook.py       # Notebook'u Python kaynağından üretip çalıştırır
-web-interface/                # Model dışa aktarma, kalibrasyon ve kontrol araçları
-car_price_prediction.ipynb     # Kayıtlı analiz ve çıktılar
-car_price_prediction.py        # Notebook'un hücre biçimli Python kaynağı
-requirements.txt              # Analiz bağımlılıkları
+.github/workflows/pages.yml    # Checks and GitHub Pages deployment
+assets/preview.png            # README screenshot
+data/car_dataset_raw.csv      # Unmodified raw listing data
+docs/                         # Canonical frontend source and deployment directory
+results/                      # Required train/test data and analysis outputs
+scripts/run_notebook.py       # Builds and executes the notebook from Python source
+web-interface/                # Model export, calibration and validation tools
+car_price_prediction.ipynb     # Saved analysis and outputs
+car_price_prediction.py        # Cell-based Python source for the notebook
+requirements.txt              # Analysis dependencies
 ```
 
-`docs/` doğrudan yayınlanır; ikinci bir web kopyası veya frontend derleme adımı yoktur. Geliştirme ayrıntıları [web-interface/README.md](web-interface/README.md) dosyasındadır.
+`docs/` is deployed directly. There is no duplicate frontend or frontend build step. See [web-interface/README.md](web-interface/README.md) for development details.
 
-## GitHub Pages kurulumu — depo sahibi için
+## GitHub Pages deployment
 
-Bu depoda GitHub Pages yayını etkinleştirilmiştir. Aşağıdaki adımlar ilk kurulumun nasıl yapıldığını açıklar; ziyaretçilerin bu işlemleri uygulaması gerekmez.
+GitHub Pages is already enabled for this repository. Visitors can use the application without following these steps. For a new deployment or fork:
 
-1. Bu klasörün güncel içeriğini, `.github/` dahil, deponun varsayılan dalına yükleyin. Eski dosyaları korumak yerine yeni klasör düzenini esas alın.
-2. Depoda **Settings → Pages → Build and deployment → Source → GitHub Actions** seçin.
-3. **Actions → Check and deploy GitHub Pages** iş akışını varsayılan dalda çalıştırın veya o dala yeni bir commit gönderin.
-4. İş akışı tamamlandığında [canlı uygulama adresini](https://hsynkrdmn.github.io/used-car-price-prediction/) açın. Aynı adresi deponun **About → Website** alanına ekleyin. Bağlantı README'nin başında da yer alır.
+1. Push the project, including `.github/`, to the repository's default branch.
+2. Select **Settings → Pages → Build and deployment → Source → GitHub Actions**.
+3. Run **Actions → Check and deploy GitHub Pages** on the default branch, or push a commit to that branch.
+4. Open the deployed URL shown by the workflow. For this repository, use the [live application](https://hsynkrdmn.github.io/used-car-price-prediction/). For a fork, update the links in the README and the repository's **About → Website** field.
 
-İş akışı tahmin ve dosya kontrolleri geçtikten sonra yalnızca `docs/` içeriğini yayınlar. Ham veri, notebook ve geliştirme araçları siteye yüklenmez. Pull request'lerde kontroller çalışır; yayın yalnızca varsayılan daldan yapılır.
+The workflow publishes only `docs/` after the validation checks pass. Raw data, notebooks and development tools are not included in the deployed site. Pull requests run checks; deployment runs only from the default branch.
 
-GitHub Pages ayarının etkinleştirilmesi dosya yüklemekten ayrı bir adımdır. [Resmî kurulum yönergesi](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
+See GitHub's [publishing source documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) for setup details.
 
-## Yerel çalıştırma
+## Run locally
 
-Web arayüzü için proje kökünde:
+From the project root, serve the frontend with:
 
 ```bash
 python -m http.server 8080 --directory docs
 ```
 
-Tarayıcıda `http://localhost:8080` adresini açın. HTML dosyasına çift tıklamak yerine HTTP sunucusu kullanın.
+Open `http://localhost:8080` in your browser. Use an HTTP server instead of opening the HTML file directly.
 
-Analizi yeniden çalıştırmak için:
+To rerun the analysis:
 
 ```bash
 python -m pip install -r requirements.txt notebook
 python scripts/run_notebook.py
 ```
 
-Alternatif olarak `car_price_prediction.ipynb` dosyasını proje kökünde çalışan Jupyter ile açabilirsiniz. Notebook'u yeniden çalıştırmak, kaydedilmiş sonuçları ve eğitim/test dosyalarını yeniler; web modelini yenilemek için ayrıca dışa aktarma adımını uygulayın.
+Alternatively, open `car_price_prediction.ipynb` in Jupyter running from the project root. Rerunning the notebook refreshes the saved outputs and training/test files. Export the web model separately to update the browser application.
 
-## Kontroller ve web modelini yenileme
+## Validation and model export
 
-Web kontrolleri Node.js 24 ile çalışır; `npm install` gerekmez:
+Web checks run on Node.js 24; no `npm install` is required:
 
 ```bash
 node web-interface/check_site.cjs
@@ -117,19 +117,19 @@ node web-interface/check_intervals.cjs
 node web-interface/check_analytics.cjs
 ```
 
-Modeli analiz kaynağından yeniden eğitip tarayıcıya aktarmak için Python bağımlılıkları ve Node.js gerekir:
+To retrain and export the model from the analysis source, install the Python dependencies and Node.js, then run:
 
 ```bash
 python web-interface/export_model.py
 ```
 
-Bu işlem `docs/` içindeki model, katalog, kalibrasyon ve analiz dosyalarını birlikte yeniler. Sonrasında kontrolleri tekrar çalıştırın. Yalnızca mevcut modelin analiz verilerini yenilemek için `node web-interface/build_analytics.cjs` kullanılabilir.
+This refreshes the model, catalog, calibration and analytics files in `docs/` together. Rerun the checks afterwards. To rebuild only the analytics for the existing model, use `node web-interface/build_analytics.cjs`.
 
-## Sınırlamalar
+## Limitations
 
-- Hedef, gerçekleşen satış fiyatı değil ilan fiyatıdır.
-- Tramer ve hasar/kondisyon sütunları güvenilirlikleri doğrulanamadığı için dışlanmıştır. Ham veriler değiştirilmez; Tramer miktarına göre eğitim satırı silinmez.
-- Hasar geçmişi, onarım kalitesi, konum ve fiziksel kondisyon tahmine dahil değildir.
-- İlan tarihleri yoktur. Yüksek test R²'si bugünkü veya gelecekteki piyasa performansını kanıtlamaz.
-- Kapsam, fiyatı 100.000–100.000.000 TL aralığındaki hazırlanmış ilanlardır; yaş hesabında referans yıl 2026'dır.
-- Gruplar araç özelliklerinden türetilir; benzersiz araç kimliği veya VIN yerine geçmez. Proje profesyonel ekspertiz ya da satış garantisi sunmaz.
+- The target is the advertised listing price, not the final sale price.
+- Tramer and damage/condition columns are excluded because their reliability could not be verified. Raw data is preserved; training rows are not removed based on Tramer amounts.
+- Damage history, repair quality, location and physical condition are not model inputs.
+- Listing dates are unavailable. A high test R² does not establish performance in today's or a future market.
+- The prepared listings cover prices from TRY 100,000 to TRY 100,000,000. Vehicle age uses 2026 as the reference year.
+- Groups are derived from vehicle specifications and do not identify individual vehicles or VINs. This project does not replace a professional inspection or guarantee a sale price.
