@@ -9,7 +9,7 @@ Türkiye ikinci el araç ilanları üzerinde veri temizleme, model karşılaşt�
 <!-- live-demo:start -->
 **[İnteraktif web uygulamasını aç](https://hsynkrdmn.github.io/used-car-price-prediction/)** · [GitHub deposu](https://github.com/hsynkrdmn/used-car-price-prediction)
 
-Uygulama adresi GitHub Pages yayını etkinleştirildiğinde kullanılabilir. İlk kurulum adımları aşağıdadır; son yayın durumunu bu deponun **Deployments → github-pages** bölümünden kontrol edebilirsiniz.
+Uygulama GitHub Pages üzerinde yayındadır. Kurulum veya IDE gerekmez; bağlantıyı açıp doğrudan tarayıcıda kullanabilirsiniz. Yayın kontrolleri [GitHub Actions](https://github.com/hsynkrdmn/used-car-price-prediction/actions/workflows/pages.yml) üzerinden izlenebilir.
 <!-- live-demo:end -->
 
 Arayüz Türkçe ve İngilizce kullanılabilir. Marka, seri, donanım, yıl ve kilometre bilgilerini düzenleyip **Fiyatı hesapla** düğmesine basın. Otomatik doldurulan bilgileri aracınızla karşılaştırın.
@@ -76,7 +76,7 @@ requirements.txt              # Analiz bağımlılıkları
 
 ## GitHub Pages kurulumu — depo sahibi için
 
-Bu işlem yalnızca ilk kurulumda gerekir. Sonrasında ziyaretçiler uygulamayı bağlantıdan doğrudan kullanır.
+Bu depoda GitHub Pages yayını etkinleştirilmiştir. Aşağıdaki adımlar ilk kurulumun nasıl yapıldığını açıklar; ziyaretçilerin bu işlemleri uygulaması gerekmez.
 
 1. Bu klasörün güncel içeriğini, `.github/` dahil, deponun varsayılan dalına yükleyin. Eski dosyaları korumak yerine yeni klasör düzenini esas alın.
 2. Depoda **Settings → Pages → Build and deployment → Source → GitHub Actions** seçin.
