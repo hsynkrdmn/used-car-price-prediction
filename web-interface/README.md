@@ -35,7 +35,7 @@ Edit files directly in `docs/`; there is no second site directory to sync.
 | `analytics.json` | Calibration MAPE cohorts and held-out permutation importance |
 | `interval.json` | Calibration for the optional 95% prediction interval |
 
-The vehicle summary appears above the price. **Illustrative Price Effects / Temsili Fiyat Etkileri** is labelled as a simulation, rather than SHAP analysis. Language changes preserve inputs, results, stale status and an open interval disclosure.
+The vehicle summary appears above the price. **Illustrative Price Effects / Temsili Fiyat Etkileri** spans both columns below the form and result, and is labelled as a simulation, rather than SHAP analysis. Language changes preserve inputs, results, stale status and an open interval disclosure. A brief reveal runs only after calculation and respects reduced-motion preferences.
 
 The price gauge is decorative and does not encode a percentile or a price scale. Effect bars share a central zero axis and are scaled to the largest absolute simulated contribution in the current result. Reduced-motion preferences disable ambient animations and transitions. Dark mode is the default, with a locally saved light-mode option.
 

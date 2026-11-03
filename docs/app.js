@@ -143,6 +143,15 @@ function renderResult() {
     return item;
   }));
 }
+function revealResult() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  for (const element of [$('result-filled'), $('impact-card')]) {
+    if (typeof element.animate !== 'function') continue;
+    for (const animation of element.getAnimations()) animation.cancel();
+    element.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'translateY(0)' }],
+      { duration: 240, easing: 'ease-out' });
+  }
+}
 function renderModelInformation() {
   if (!state.metadata || !state.analytics) return;
   const metadata = state.metadata, analytics = state.analytics;
@@ -264,7 +273,7 @@ $('vehicle-form').addEventListener('submit', async event => {
     const impacts = CarPredictor.simulatedImpacts(input, prediction, state.metadata.reference_year);
     const interval = CarPredictor.predictionInterval(prediction, state.calibration);
     state.result = { input, prediction, band, impacts, interval }; state.dirty = false; state.error = null;
-    renderResult(); renderError();
+    renderResult(); renderError(); revealResult();
     if (window.innerWidth < 701) document.querySelector('.estimate-card').scrollIntoView({
       behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
   } catch { state.error = 'invalidPrediction'; renderError(); }
