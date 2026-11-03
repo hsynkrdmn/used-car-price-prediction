@@ -10,6 +10,7 @@
   color-scheme: dark;
   --mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
   --glow: rgba(0, 242, 254, .13);
+  --grid: rgba(0, 242, 254, .04);
   --ink: #e5f1f7;
   --muted: #9caec1;
   --paper: #080f1b;
@@ -33,6 +34,7 @@
 :root[data-theme="light"] {
   color-scheme: light;
   --glow: rgba(0, 139, 156, .1);
+  --grid: rgba(0, 126, 138, .04);
   --ink: #172c3b;
   --muted: #526b7d;
   --paper: #eef5f8;
@@ -115,10 +117,7 @@ input[type=number], select { border-radius:5px; border-color:var(--line); backgr
 .impact-list strong { font-size:12px; font-weight:400; letter-spacing:0; }
 .impact-note { font-size:10px; line-height:1.6; }
 .stat-grid { gap:15px; border:0; }
-.stat-card { border:1px solid var(--line); border-radius:7px; padding:20px 22px; background:var(--teal-soft); }
-.stat-card:nth-child(2) { background:var(--cyan-soft); border-color:var(--line); }
-.stat-card:nth-child(3) { background:var(--raised); border-color:var(--line); }
-.stat-card:nth-child(4) { background:var(--teal-soft); border-color:var(--line); }
+.stat-card { border:1px solid var(--line); border-radius:7px; padding:20px 22px; background:var(--surface); }
 .stat-card strong { color:var(--ink); }
 .model-table-panel { border-top:3px solid var(--teal); }
 .importance-insight { color:var(--teal); font-size:13px; line-height:1.8; padding:14px 17px; border-left:3px solid var(--teal); background:var(--teal-soft); border-radius:0 5px 5px 0; margin:15px 0; }
@@ -197,12 +196,31 @@ tr.winner { background:var(--teal-soft); }
 }
 
 body {
-  background-image:radial-gradient(ellipse at 85% 5%, var(--glow), transparent 48%),
-    linear-gradient(var(--glow) 1px, transparent 1px), linear-gradient(90deg, var(--glow) 1px, transparent 1px);
-  background-size:100% 100%, 96px 96px, 96px 96px;
+  position:relative;
+  isolation:isolate;
+  background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:40px 40px;
   background-attachment:scroll;
 }
-.panel, .estimate-card, .notes-card {
+.ambient-light { position:absolute; inset:0; overflow:hidden; z-index:-1; pointer-events:none; }
+.ambient-orb { position:absolute; display:block; border-radius:50%; animation:aurora-drift 26s ease-in-out infinite; }
+.ambient-orb-cyan {
+  top:-150px; left:-150px; width:600px; height:600px;
+  background:radial-gradient(rgba(0, 242, 254, .08), transparent 70%);
+  filter:blur(120px);
+}
+.ambient-orb-emerald {
+  right:-100px; bottom:-100px; width:500px; height:500px;
+  background:radial-gradient(rgba(16, 185, 129, .06), transparent 70%);
+  filter:blur(100px);
+  animation-direction:reverse;
+  animation-duration:32s;
+}
+@keyframes aurora-drift {
+  0%, 100% { transform:translate3d(0, 0, 0); }
+  50% { transform:translate3d(30px, 20px, 0); }
+}
+.panel, .estimate-card, .notes-card, .stat-card {
   background:var(--surface);
   -webkit-backdrop-filter:blur(16px);
   backdrop-filter:blur(16px);
@@ -216,7 +234,7 @@ body {
   box-shadow:0 0 0 1px var(--glow), 0 0 24px var(--glow);
 }
 @media(hover:hover) {
-  .panel:hover, .estimate-card:hover, .notes-card:hover {
+  .panel:hover, .estimate-card:hover, .notes-card:hover, .stat-card:hover {
     border-color:var(--accent);
     box-shadow:0 0 0 1px var(--glow), 0 0 28px var(--glow);
   }
