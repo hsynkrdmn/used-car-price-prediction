@@ -4,7 +4,7 @@ const $ = id => document.getElementById(id);
 let savedLanguage;
 try { savedLanguage = localStorage.getItem('car-analysis-language'); } catch {}
 const state = { language: savedLanguage === 'en' ? 'en' : 'tr', metadata: null, model: null,
-  analytics: null, calibration: null, result: null, dirty: false, status: 'loading', hint: 'defaultsHint', error: null, timer: null, blueprintTimer: null };
+  analytics: null, calibration: null, result: null, dirty: false, status: 'loading', hint: 'defaultsHint', error: null, timer: null };
 const t = (key, params) => CarI18n.t(state.language, key, params);
 const locale = () => state.language === 'tr' ? 'tr-TR' : 'en-GB';
 const number = (value, digits = 0) => Number(value).toLocaleString(locale(), { minimumFractionDigits: digits, maximumFractionDigits: digits });
@@ -84,16 +84,9 @@ function renderError() {
   $('form-error').hidden = !state.error;
   $('form-error').textContent = state.error ? t(state.error) : '';
 }
-function pulseBlueprint() {
-  const card = document.querySelector('.estimate-card');
-  clearTimeout(state.blueprintTimer);
-  card.classList.add('is-responding');
-  state.blueprintTimer = setTimeout(() => card.classList.remove('is-responding'), 1600);
-}
 function markDirty() {
   state.error = null;
   renderError();
-  if (state.status === 'ready') pulseBlueprint();
   if (state.result) { state.dirty = true; renderResult(); }
 }
 function clearResult() {
@@ -271,7 +264,7 @@ $('vehicle-form').addEventListener('submit', async event => {
     const impacts = CarPredictor.simulatedImpacts(input, prediction, state.metadata.reference_year);
     const interval = CarPredictor.predictionInterval(prediction, state.calibration);
     state.result = { input, prediction, band, impacts, interval }; state.dirty = false; state.error = null;
-    renderResult(); renderError(); pulseBlueprint();
+    renderResult(); renderError();
     if (window.innerWidth < 701) document.querySelector('.estimate-card').scrollIntoView({
       behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
   } catch { state.error = 'invalidPrediction'; renderError(); }

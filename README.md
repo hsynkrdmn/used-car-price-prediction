@@ -21,7 +21,7 @@ GitHub's file viewer does not run `index.html`. Use the GitHub Pages link for th
 ## Features
 
 - Real CatBoost point predictions computed locally in the browser.
-- Cyan and emerald glass panels, a decorative vehicle blueprint, a digital price gauge and diverging effect bars.
+- Cyan and emerald glass panels, ambient aurora lighting, a digital price gauge and diverging effect bars.
 - An indicative band based on MAPE for comparable brand/series groups, limited to an 8–10% display margin.
 - A separate, expandable calibrated prediction interval targeting 95% coverage.
 - Illustrative effects for trim, mileage and age, clearly labelled as **simulations**.

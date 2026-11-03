@@ -239,24 +239,6 @@ body {
     box-shadow:0 0 0 1px var(--glow), 0 0 28px var(--glow);
   }
 }
-.estimate-card { position:relative; isolation:isolate; overflow:hidden; }
-.estimate-card > :not(.car-blueprint) { position:relative; z-index:1; }
-.car-blueprint {
-  position:absolute;
-  z-index:0;
-  width:122%;
-  height:auto;
-  max-width:none;
-  left:-9%;
-  top:12%;
-  opacity:.1;
-  pointer-events:none;
-  user-select:none;
-  transition:filter .5s;
-}
-.estimate-card.is-responding .car-blueprint {
-  filter:drop-shadow(0 0 3px #00f2fe) drop-shadow(0 0 11px #00f2fe);
-}
 #result-empty { min-height:275px; display:flex; flex-direction:column; justify-content:center; text-align:center; }
 #result-empty .empty-price { font-family:var(--mono); color:var(--accent); opacity:.55; }
 .price-gauge { position:relative; width:100%; max-width:365px; aspect-ratio:400/205; margin:0 auto 20px; }
