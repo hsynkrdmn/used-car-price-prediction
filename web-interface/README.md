@@ -39,7 +39,7 @@ The vehicle summary appears above the price. **Illustrative Price Effects / Tems
 
 The price gauge is decorative and does not encode a percentile or a price scale. Effect bars share a central zero axis and are scaled to the largest absolute simulated contribution in the current result. Dark mode is the default, with a locally saved light-mode option.
 
-Ambient lighting uses static radial gradients without large blur filters or continuous animation. Desktop cards use a light 4px backdrop blur; screens up to 1020px and reduced-motion users disable backdrop filtering. Hover states change the border colour without animating blurred shadows. Reduced-motion preferences also disable the brief result transition.
+The background uses a static linear gradient with a subtle grid, without separate glow elements, large blur filters or continuous animation. Desktop cards use a light 4px backdrop blur; screens up to 1020px and reduced-motion users disable backdrop filtering. Hover states change the border colour without animating blurred shadows. Reduced-motion preferences also disable the brief result transition.
 
 Numeric readouts use a locally bundled [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) font, distributed under the [SIL Open Font License](../docs/fonts/OFL.txt). No external font request is needed at runtime.
 

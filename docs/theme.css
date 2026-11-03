@@ -14,6 +14,7 @@
   --ink: #e5f1f7;
   --muted: #9caec1;
   --paper: #080f1b;
+  --page-gradient: linear-gradient(135deg, #080f1b 0%, #0c2030 52%, #0b2827 100%);
   --line: rgba(148, 180, 204, .2);
   --accent: #00f2fe;
   --surface: rgba(15, 23, 42, .75);
@@ -38,6 +39,7 @@
   --ink: #172c3b;
   --muted: #526b7d;
   --paper: #eef5f8;
+  --page-gradient: linear-gradient(135deg, #f4f8fc 0%, #e8f2f8 52%, #e8f5f0 100%);
   --line: rgba(64, 107, 129, .22);
   --accent: #007e8a;
   --surface: rgba(255, 255, 255, .82);
@@ -197,21 +199,10 @@ tr.winner { background:var(--teal-soft); }
 }
 
 body {
-  position:relative;
-  isolation:isolate;
-  background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size:40px 40px;
+  background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px), var(--page-gradient);
+  background-size:40px 40px, 40px 40px, 100% 100%;
+  background-repeat:repeat, repeat, no-repeat;
   background-attachment:scroll;
-}
-.ambient-light { position:absolute; inset:0; overflow:hidden; z-index:-1; pointer-events:none; }
-.ambient-orb { position:absolute; display:block; border-radius:50%; }
-.ambient-orb-cyan {
-  top:-150px; left:-150px; width:600px; height:600px;
-  background:radial-gradient(rgba(0, 242, 254, .08), transparent 70%);
-}
-.ambient-orb-emerald {
-  right:-100px; bottom:-100px; width:500px; height:500px;
-  background:radial-gradient(rgba(16, 185, 129, .06), transparent 70%);
 }
 .panel, .estimate-card, .notes-card, .stat-card {
   background:var(--surface);
